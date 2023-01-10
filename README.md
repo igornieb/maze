@@ -17,15 +17,12 @@
     4. Exit
     #######[IGOR NIEBYLSKI 2023]#######
     
-    
-    Maze .txt file template:
-  
-  
+    Characters legend:
         # - walls
          - passgaes (whitespaces)
         e - exit (only one)
         s - start (only one)
-        Example maze:
+    Example .txt maze:
         #e#####
         # #   #
         #     #
