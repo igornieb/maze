@@ -8,7 +8,7 @@
   
   You can either chose to solve maze created by yourself - from .txt file or solve randomly generated maze which program generates. There is a baisc menu in which you can choose your preferences by typing in number coresponding to option.
   
-  #Menu:
+    Menu:
   
     ###########[MAZE SOLVER]###########
     1. Solve maze loaded from from file 
@@ -18,7 +18,7 @@
     #######[IGOR NIEBYLSKI 2023]#######
     
     
-  #Maze .txt file template:
+    Maze .txt file template:
   
   
         # - walls
