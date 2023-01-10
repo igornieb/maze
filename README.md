@@ -12,11 +12,14 @@ Maze solver made in python
     ###########[MAZE SOLVER]###########
     1. Solve maze loaded from from file 
     2. Solve randomly generated maze
-    3. Help 
+    3. Help
+    4. Exit
     #######[IGOR NIEBYLSKI 2023]#######
     
     
   #Maze .txt file template:
+  
+  
         # - walls
          - passgaes (whitespaces)
         e - exit (only one)
