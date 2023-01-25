@@ -1,197 +1,225 @@
-from random import randint
+import random
+
+def surroundingCells(rand_wall,maze):
+    s_cells = 0
+    if (maze[rand_wall[0] - 1][rand_wall[1]] == ' '):
+        s_cells += 1
+    if (maze[rand_wall[0] + 1][rand_wall[1]] == ' '):
+        s_cells += 1
+    if (maze[rand_wall[0]][rand_wall[1] - 1] == ' '):
+        s_cells += 1
+    if (maze[rand_wall[0]][rand_wall[1] + 1] == ' '):
+        s_cells += 1
+
+    return s_cells
+
+def maze_gen(height, width):
+    # Init variables
+    wall = "#"
+    cell = " "
+    unvisited = 'u'
+    maze = []
 
 
-# Class to define structure of a node
-class Node:
-    def __init__(self, value=None,
-                 next_element=None):
-        self.val = value
-        self.next = next_element
+    # Denote all cells as unvisited
+    for i in range(0, height):
+        line = []
+        for j in range(0, width):
+            line.append(unvisited)
+        maze.append(line)
 
+    # Randomize starting point and set it a cell
+    starting_height = int(random.random() * height)
+    starting_width = int(random.random() * width)
+    if (starting_height == 0):
+        starting_height += 1
+    if (starting_height == height - 1):
+        starting_height -= 1
+    if (starting_width == 0):
+        starting_width += 1
+    if (starting_width == width - 1):
+        starting_width -= 1
 
-# Class to implement a stack
-class stack:
+    # Mark it as cell and add surrounding walls to the list
+    maze[starting_height][starting_width] = cell
+    walls = []
+    walls.append([starting_height - 1, starting_width])
+    walls.append([starting_height, starting_width - 1])
+    walls.append([starting_height, starting_width + 1])
+    walls.append([starting_height + 1, starting_width])
 
-    # Constructor
-    def __init__(self):
-        self.head = None
-        self.length = 0
+    # Denote walls in maze
+    maze[starting_height - 1][starting_width] = "#"
+    maze[starting_height][starting_width - 1] = "#"
+    maze[starting_height][starting_width + 1] = "#"
+    maze[starting_height + 1][starting_width] = "#"
 
-    # Put an item on the top of the stack
-    def insert(self, data):
-        self.head = Node(data, self.head)
-        self.length += 1
+    while (walls):
+        # Pick a random wall
+        rand_wall = walls[int(random.random() * len(walls)) - 1]
 
-    # Return the top position of the stack
-    def pop(self):
-        if self.length == 0:
-            return None
-        else:
-            returned = self.head.val
-            self.head = self.head.next
-            self.length -= 1
-            return returned
+        # Check if it is a left wall
+        if (rand_wall[1] != 0):
+            if (maze[rand_wall[0]][rand_wall[1] - 1] == 'u' and maze[rand_wall[0]][rand_wall[1] + 1] == " "):
+                # Find the number of surrounding cells
+                s_cells = surroundingCells(rand_wall,maze)
 
-    # Return False if the stack is empty
-    # and true otherwise
-    def not_empty(self):
-        return bool(self.length)
+                if (s_cells < 2):
+                    # Denote the new path
+                    maze[rand_wall[0]][rand_wall[1]] = " "
 
-    # Return the top position of the stack
-    def top(self):
-        return self.head.val
+                    # Mark the new walls
+                    # Upper cell
+                    if (rand_wall[0] != 0):
+                        if (maze[rand_wall[0] - 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] - 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] - 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] - 1, rand_wall[1]])
 
+                    # Bottom cell
+                    if (rand_wall[0] != height - 1):
+                        if (maze[rand_wall[0] + 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] + 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] + 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] + 1, rand_wall[1]])
 
-# Function to generate the random maze
-def random_maze_generator(r, c, P0, Pf):
-    ROWS, COLS = r, c
+                    # Leftmost cell
+                    if (rand_wall[1] != 0):
+                        if (maze[rand_wall[0]][rand_wall[1] - 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] - 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] - 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] - 1])
 
-    # Array with only walls (where paths will
-    # be created)
-    maze = list(list(0 for _ in range(COLS))
-                for _ in range(ROWS))
+                # Delete wall
+                for wall in walls:
+                    if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
+                        walls.remove(wall)
 
-    # Auxiliary matrices to avoid cycles
-    seen = list(list(False for _ in range(COLS))
-                for _ in range(ROWS))
-    previous = list(list((-1, -1)
-                         for _ in range(COLS)) for _ in range(ROWS))
+                continue
 
-    S = stack()
+        # Check if it is an upper wall
+        if (rand_wall[0] != 0):
+            if (maze[rand_wall[0] - 1][rand_wall[1]] == 'u' and maze[rand_wall[0] + 1][rand_wall[1]] == " "):
 
-    # Insert initial position
-    S.insert(P0)
+                s_cells = surroundingCells(rand_wall,maze)
+                if (s_cells < 2):
+                    # Denote the new path
+                    maze[rand_wall[0]][rand_wall[1]] = " "
 
-    # Keep walking on the graph using dfs
-    # until we have no more paths to traverse
-    # (create)
-    while S.not_empty():
+                    # Mark the new walls
+                    # Upper cell
+                    if (rand_wall[0] != 0):
+                        if (maze[rand_wall[0] - 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] - 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] - 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] - 1, rand_wall[1]])
 
-        # Remove the position of the Stack
-        # and mark it as seen
-        x, y = S.pop()
-        seen[x][y] = True
+                    # Leftmost cell
+                    if (rand_wall[1] != 0):
+                        if (maze[rand_wall[0]][rand_wall[1] - 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] - 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] - 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] - 1])
 
-        # Check if it will create a cycle
-        # if the adjacent position is valid
-        # (is in the maze) and the position
-        # is not already marked as a path
-        # (was traversed during the dfs) and
-        # this position is not the one before it
-        # in the dfs path it means that
-        # the current position must not be marked.
+                    # Rightmost cell
+                    if (rand_wall[1] != width - 1):
+                        if (maze[rand_wall[0]][rand_wall[1] + 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] + 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] + 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] + 1])
 
-        # This is to avoid cycles with adj positions
-        if (x + 1 < ROWS) and maze[x + 1][y] == 1 \
-                and previous[x][y] != (x + 1, y):
-            continue
-        if (0 < x) and maze[x - 1][y] == 1 \
-                and previous[x][y] != (x - 1, y):
-            continue
-        if (y + 1 < COLS) and maze[x][y + 1] == 1 \
-                and previous[x][y] != (x, y + 1):
-            continue
-        if (y > 0) and maze[x][y - 1] == 1 \
-                and previous[x][y] != (x, y - 1):
-            continue
+                # Delete wall
+                for wall in walls:
+                    if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
+                        walls.remove(wall)
 
-        # Mark as walkable position
-        maze[x][y] = 1
+                continue
 
-        # Array to shuffle neighbours before
-        # insertion
-        to_stack = []
+        # Check the bottom wall
+        if (rand_wall[0] != height - 1):
+            if (maze[rand_wall[0] + 1][rand_wall[1]] == 'u' and maze[rand_wall[0] - 1][rand_wall[1]] == " "):
 
-        # Before inserting any position,
-        # check if it is in the boundaries of
-        # the maze
-        # and if it were seen (to avoid cycles)
+                s_cells = surroundingCells(rand_wall,maze)
+                if (s_cells < 2):
+                    # Denote the new path
+                    maze[rand_wall[0]][rand_wall[1]] = " "
 
-        # If adj position is valid and was not seen yet
-        if (x + 1 < ROWS) and seen[x + 1][y] == False:
-            # Mark the adj position as seen
-            seen[x + 1][y] = True
+                    # Mark the new walls
+                    if (rand_wall[0] != height - 1):
+                        if (maze[rand_wall[0] + 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] + 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] + 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] + 1, rand_wall[1]])
+                    if (rand_wall[1] != 0):
+                        if (maze[rand_wall[0]][rand_wall[1] - 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] - 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] - 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] - 1])
+                    if (rand_wall[1] != width - 1):
+                        if (maze[rand_wall[0]][rand_wall[1] + 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] + 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] + 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] + 1])
 
-            # Memorize the position to insert the
-            # position in the stack
-            to_stack.append((x + 1, y))
+                # Delete wall
+                for wall in walls:
+                    if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
+                        walls.remove(wall)
 
-            # Memorize the current position as its
-            # previous position on the path
-            previous[x + 1][y] = (x, y)
+                continue
 
-        if (0 < x) and seen[x - 1][y] == False:
-            # Mark the adj position as seen
-            seen[x - 1][y] = True
+        # Check the right wall
+        if (rand_wall[1] != width - 1):
+            if (maze[rand_wall[0]][rand_wall[1] + 1] == 'u' and maze[rand_wall[0]][rand_wall[1] - 1] == " "):
 
-            # Memorize the position to insert the
-            # position in the stack
-            to_stack.append((x - 1, y))
+                s_cells = surroundingCells(rand_wall,maze)
+                if (s_cells < 2):
+                    # Denote the new path
+                    maze[rand_wall[0]][rand_wall[1]] = " "
 
-            # Memorize the current position as its
-            # previous position on the path
-            previous[x - 1][y] = (x, y)
+                    # Mark the new walls
+                    if (rand_wall[1] != width - 1):
+                        if (maze[rand_wall[0]][rand_wall[1] + 1] != " "):
+                            maze[rand_wall[0]][rand_wall[1] + 1] = "#"
+                        if ([rand_wall[0], rand_wall[1] + 1] not in walls):
+                            walls.append([rand_wall[0], rand_wall[1] + 1])
+                    if (rand_wall[0] != height - 1):
+                        if (maze[rand_wall[0] + 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] + 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] + 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] + 1, rand_wall[1]])
+                    if (rand_wall[0] != 0):
+                        if (maze[rand_wall[0] - 1][rand_wall[1]] != " "):
+                            maze[rand_wall[0] - 1][rand_wall[1]] = "#"
+                        if ([rand_wall[0] - 1, rand_wall[1]] not in walls):
+                            walls.append([rand_wall[0] - 1, rand_wall[1]])
 
-        if (y + 1 < COLS) and seen[x][y + 1] == False:
-            # Mark the adj position as seen
-            seen[x][y + 1] = True
+                # Delete wall
+                for wall in walls:
+                    if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
+                        walls.remove(wall)
 
-            # Memorize the position to insert the
-            # position in the stack
-            to_stack.append((x, y + 1))
+                continue
 
-            # Memorize the current position as its
-            # previous position on the path
-            previous[x][y + 1] = (x, y)
+        # Delete the wall from the list anyway
+        for wall in walls:
+            if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
+                walls.remove(wall)
 
-        if (y > 0) and seen[x][y - 1] == False:
-            # Mark the adj position as seen
-            seen[x][y - 1] = True
+    # Mark the remaining unvisited cells as walls
+    for i in range(0, height):
+        for j in range(0, width):
+            if (maze[i][j] == 'u'):
+                maze[i][j] = "#"
 
-            # Memorize the position to insert the
-            # position in the stack
-            to_stack.append((x, y - 1))
+    # Set entrance and exit
+    for i in range(0, width):
+        if (maze[1][i] == " "):
+            maze[0][i] = "e"
+            break
 
-            # Memorize the current position as its
-            # previous position on the path
-            previous[x][y - 1] = (x, y)
-
-        # Indicates if Pf is a neighbour position
-        pf_flag = False
-        while len(to_stack):
-
-            # Remove random position
-            neighbour = to_stack.pop(randint(0, len(to_stack) - 1))
-
-            # Is the final position,
-            # remember that by marking the flag
-            if neighbour == Pf:
-                pf_flag = True
-
-            # Put on the top of the stack
-            else:
-                S.insert(neighbour)
-
-        # This way, Pf will be on the top
-        if pf_flag:
-            S.insert(Pf)
-
-    # Mark the initial position
-    x0, y0 = P0
-    xf, yf = Pf
-    maze[x0][y0] = 2
-    maze[xf][yf] = 3
-
-    # Return maze formed by the traversed path
+    for i in range(width - 1, 0, -1):
+        if (maze[height - 2][i] == " "):
+            maze[height - 1][i] = "s"
+            break
     return maze
-
-
-# Driver code
-if __name__ == "__main__":
-    N = 5
-    M = 5
-    P0 = (0, 0)
-    P1 = (4, 4)
-    maze = random_maze_generator(N, M, P0, P1)
-    for line in maze:
-        print(line)
