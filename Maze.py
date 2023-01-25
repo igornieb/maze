@@ -2,8 +2,7 @@ from typing import *
 from Block import Block
 import random
 from queue import PriorityQueue
-from mazegenerator import random_maze_generator
-
+from mazegenerator import maze_gen
 
 class Maze:
     maze = list()
@@ -21,7 +20,6 @@ class Maze:
             return self.maze
         except:
             exit()
-
     def randomMaze2(self, x, y):
         rx = random.randint(0, y - 1)
         start = [0, rx]
@@ -43,25 +41,14 @@ class Maze:
             # line.append(Block("#"))
             self.maze.append(line)
 
-    def generateMaze1(self, x, y):
+    def generateMaze(self, x, y):
+        tmp=maze_gen(x,y)
         for i in range(x):
-            line = list()
+            line=list()
+            print(tmp[i])
             for j in range(y):
-                line.append(Block("#"))
+                line.append(Block(tmp[i][j]))
             self.maze.append(line)
-
-        for i in range(x):
-            for j in range(y):
-                n = self.getTopOrLeft([i, j])
-                if n is not None:
-                    n.setSymbol(" ")
-
-        rx = random.randint(1, x - 1)
-        ry = random.randint(1, x - 1)
-        start = self.maze[0][rx]
-        start.setSymbol("e")
-        exit = self.maze[y - 1][ry]
-        exit.setSymbol("s")
 
     def getTopOrLeft(self, index):
         x = index[0]
@@ -105,13 +92,14 @@ class Maze:
         return indexes
 
     def blocksToSet(self) -> bool:
+        # returns trueif there are still blocks whith unasined values in maze instance
         for i in range(0, len(self.maze)):
             for j in range(0, len(self.maze[i])):
                 if self.maze[i][j].isWalkable() is True and self.maze[i][j].isSet() is False:
                     return True
 
     def findNearby(self, index) -> List[Block]:
-        # find left right top bottom, return only blocks that arent not set
+        # find left right top bottom, neighbours of blokck, return only blocks that arent not set
         x = len(self.maze) - 1
         y = len(self.maze[0]) - 1
         nearbyBlocks = list()
@@ -144,6 +132,7 @@ class Maze:
                     return (i, j)
 
     def assignBlockValues(self) -> None:
+        #used for solving with BFS
         self.endIndex()
         value = 0
         while self.blocksToSet():
@@ -207,6 +196,7 @@ class Maze:
         aPath = {}
         start = self.endIndex()
         end = self.startIndex()
+        # TODO simplify
         g_value = {self.findBlockIndex(block): float('inf') for block in self.listAllElements()}
         g_value[start] = 0
         f_value = {self.findBlockIndex(block): float('inf') for block in self.listAllElements()}
