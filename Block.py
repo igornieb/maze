@@ -1,8 +1,9 @@
 class Block:
     symbol = None
     walkable = False  # is it a wall or is it a route
-    value = None  # how far is it from end - used for first path algorithm - BFS
-
+    value = None  # how far is it from end - used for finding path alghoritm - BFS
+    x=None
+    y=None
     def __init__(self, symbol):
         self.symbol = symbol
         if symbol == "#":

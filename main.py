@@ -59,7 +59,7 @@ def menu():
 
 def maze():
         menu()
-        ans = int(input("Chose option from 1 to 3: "))
+        ans = int(input("Chose option from 1 to 4: "))
         m = Maze()
         if ans == 1:
             infile = input("\tSpecify file directory: ")
