@@ -20,32 +20,11 @@ class Maze:
             return self.maze
         except:
             exit()
-    def randomMaze2(self, x, y):
-        rx = random.randint(0, y - 1)
-        start = [0, rx]
-        ry = random.randint(0, y - 1)
-        end = [x-1,ry]
-        randomMaze = random_maze_generator(x, y, start, end)
-        for i in range(x):
-            line = list()
-            # line.append(Block("#"))
-            for j in range(y):
-                if randomMaze[i][j] == 0:
-                    line.append(Block("#"))
-                if randomMaze[i][j] == 1:
-                    line.append(Block(" "))
-                if randomMaze[i][j] == 2:
-                    line.append(Block("s"))
-                if randomMaze[i][j] == 3:
-                    line.append(Block("e"))
-            # line.append(Block("#"))
-            self.maze.append(line)
 
     def generateMaze(self, x, y):
         tmp=maze_gen(x,y)
         for i in range(x):
             line=list()
-            print(tmp[i])
             for j in range(y):
                 line.append(Block(tmp[i][j]))
             self.maze.append(line)
@@ -196,10 +175,13 @@ class Maze:
         aPath = {}
         start = self.endIndex()
         end = self.startIndex()
-        # TODO simplify
-        g_value = {self.findBlockIndex(block): float('inf') for block in self.listAllElements()}
+        g_value = {}
+        f_value = {}
+        for i in range(len(self.maze)):
+            for j in range(len(self.maze[i])):
+                g_value[(i,j)]=float("inf")
+                f_value[(i,j)]=float("inf")
         g_value[start] = 0
-        f_value = {self.findBlockIndex(block): float('inf') for block in self.listAllElements()}
         g_value[start] = self.h(start, end)
         queue = PriorityQueue()
         queue.put((self.h(start, end), self.h(start, end), start))
