@@ -29,6 +29,24 @@ class Maze:
                 line.append(Block(tmp[i][j]))
             self.maze.append(line)
 
+    def randomMaze1(self, x, y):
+        for i in range(x):
+            line=list()
+            for j in range(y):
+                line.append(Block("#"))
+            self.maze.append(line)
+        for i in range(x):
+            for j in range(y):
+                n = self.getTopOrLeft([i,j])
+                if n is not None:
+                    n.setSymbol(" ")
+
+        rx = random.randint(1,x-1)
+        ry = random.randint(1,x-1)
+        start = self.maze[0][rx]
+        start.setSymbol("s")
+        end = self.maze[y-1][ry]
+        end.setSymbol("e")
     def getTopOrLeft(self, index):
         x = index[0]
         y = index[1]
