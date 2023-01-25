@@ -8,8 +8,8 @@
   
   You can either chose to solve maze created by yourself - from .txt file or solve randomly generated maze which program generates. There is a baisc menu in which you can choose your preferences by typing in number coresponding to option.
   
-    Menu:
-  
+Menu:
+
     ###########[MAZE SOLVER]###########
     1. Solve maze loaded from from file 
     2. Solve randomly generated maze
@@ -17,12 +17,14 @@
     4. Exit
     #######[IGOR NIEBYLSKI 2023]#######
     
-    Characters legend:
+Characters legend:
+
         # - walls
          - passgaes (whitespaces)
         e - exit (only one)
         s - start (only one)
-    Example .txt maze:
+Example .txt maze:
+
         #e#####
         # #   #
         #     #
