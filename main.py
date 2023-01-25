@@ -67,7 +67,7 @@ def maze():
         if ans == 2:
             y = int(input("\tMaze width: "))
             x = int(input("\tMaze height: "))
-            m.randomMaze2(x,y)
+            m.generateMaze(x,y)
         if ans==3:
             help()
             exit()
