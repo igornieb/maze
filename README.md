@@ -1,13 +1,10 @@
 # MAZE SOLVER
 # Description
   This python script solves mazes - finds and marks shortest path from start to end of a maze using A* (A star) algorithm.
-  I tested it for mazes up to size of 150x150. For mazes bigger than 100x100 it takes considerable amount of time to execute. I didn’t use any maze library because I wanted to try to implement everything on my own.
+  I tested it for mazes up to size of 500x500.
 # How to use it
   Simply launch main.py file in terminal by typing:
     ```python main.py```
-  
-  
-  
   You can either chose to solve maze created by yourself - from .txt file or solve randomly generated maze which program generates. There is a baisc menu in which you can choose your preferences by typing in number coresponding to option.
   
 Menu:
