@@ -117,7 +117,7 @@ class Maze:
         return abs(x1 - x2) + abs(y1 + y2)
 
     def solve_maze_a_star(self) -> None:
-        aPath = {}
+        a_path = {}
         start = self.start
         end = self.end
         walkable_elements = self.list_all_walkable_elements()
@@ -143,21 +143,21 @@ class Maze:
                         g_value[block] = tmp_g_value
                         f_value[block] = tmp_f_value
                         queue.put((tmp_f_value, self.h(block, end), block))
-                        aPath[block] = current
-        fwdPath = {}
+                        a_path[block] = current
+        fwd_path = {}
         block = end
         # swap keys with values
         while block != start:
-            fwdPath[aPath[block]] = block
-            block = aPath[block]
+            fwd_path[a_path[block]] = block
+            block = a_path[block]
 
-        for block in fwdPath:
+        for block in fwd_path:
             cell = self.maze[block[0]][block[1]]
             if cell.get_symbol() != "e":
                 cell.symbol = "*"
 
     def get_path_a_star(self):
-        aPath = {}
+        a_path = {}
         start = self.start
         end = self.end
         walkable_elements = self.list_all_walkable_elements()
@@ -182,11 +182,12 @@ class Maze:
                         g_value[block] = tmp_g_value
                         f_value[block] = tmp_f_value
                         queue.put((tmp_f_value, self.h(block, end), block))
-                        aPath[block] = current
-        fwdPath = {}
+                        a_path[block] = current
+        fwd_path = {}
         block = end
         # swap keys with values
         while block != start:
-            fwdPath[aPath[block]] = block
-            block = aPath[block]
-        return aPath, fwdPath
+            fwd_path[a_path[block]] = block
+            block = a_path[block]
+
+        return a_path, fwd_path
