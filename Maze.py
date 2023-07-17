@@ -109,6 +109,7 @@ class Maze:
                 if self.maze[i][j].is_walkable():
                     tab.append(self.maze[i][j])
         return tab
+
     def h(self, cell1, cell2):
         # returns distance from cell1 to cell2 (current cell) to (end cell)
         x1, y1 = cell1
@@ -116,6 +117,46 @@ class Maze:
         return abs(x1 - x2) + abs(y1 + y2)
 
     def solve_maze_a_star(self) -> None:
+        aPath = {}
+        start = self.start
+        end = self.end
+        walkable_elements = self.list_all_walkable_elements()
+        g_value = {(block.x, block.y): float('inf') for block in walkable_elements}
+        g_value[start] = 0
+        f_value = {(block.x, block.y): float('inf') for block in walkable_elements}
+        g_value[start] = self.h(start, end)
+        queue = PriorityQueue()
+        queue.put((self.h(start, end), self.h(start, end), start))
+
+        while not queue.empty():
+            current = queue.get()[2]
+            if current == end:
+                queue = PriorityQueue()
+                break
+            else:
+                n = self.find_nearby(current)
+                for block in n:
+                    block = (block.x, block.y)
+                    tmp_g_value = g_value[current] + 1
+                    tmp_f_value = tmp_g_value + self.h(block, end)
+                    if tmp_f_value < f_value[block]:
+                        g_value[block] = tmp_g_value
+                        f_value[block] = tmp_f_value
+                        queue.put((tmp_f_value, self.h(block, end), block))
+                        aPath[block] = current
+        fwdPath = {}
+        block = end
+        # swap keys with values
+        while block != start:
+            fwdPath[aPath[block]] = block
+            block = aPath[block]
+
+        for block in fwdPath:
+            cell = self.maze[block[0]][block[1]]
+            if cell.get_symbol() != "e":
+                cell.symbol = "*"
+
+    def get_path_a_star(self):
         aPath = {}
         start = self.start
         end = self.end
@@ -148,8 +189,4 @@ class Maze:
         while block != start:
             fwdPath[aPath[block]] = block
             block = aPath[block]
-
-        for block in fwdPath:
-            cell = self.maze[block[0]][block[1]]
-            if cell.get_symbol() != "e":
-                cell.symbol = "*"
+        return aPath, fwdPath
